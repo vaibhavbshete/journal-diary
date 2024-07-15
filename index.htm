@@ -8,12 +8,14 @@
     <script src="assets/main.js?v=3"></script>
 </head>
 <body>
-    <ul class="log" id="logList"></ul>
-    <div>
-        <input type="text" name="note_text" id="noteInp" placeholder="note">
-        <input type="datetime-local" name="start_time" id="startInp">
-        <button id="subBtn">submit</button>
+    <div class="px-2">
+        <ul class="log" id="logList"></ul>
     </div>
-    <ul class="notes" id="notesList"></ul>
+    <div class="px-2" id="form">
+        <textarea class="w-full block" name="note_text" id="noteInp" placeholder="note"></textarea>
+        <input type="datetime-local" name="start_time" id="startInp" value="2020-01-01T00:00">
+        <button class="btn" id="subBtn" type="button">submit</button>
+    </div>
+    <ul class="notes px-2" id="notesList"></ul>
 </body>
 </html>
