@@ -1,7 +1,16 @@
+*{
+    box-sizing: border-box;
+}
 body{
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    padding: 0;
+    margin: 0;
+    
 }
-ul.log{
+ul{
+    padding: 0;
+}
+.log{
     border: 1px solid green;
     background-color: lightgreen;
     border-radius: 3px;
@@ -18,10 +27,10 @@ ul.log>li{
     list-style-type: none;
 }
 
-ul.notes{
+/* ul.notes{
    padding: 0;
    
-}
+} */
 
 ul.notes li+li{
     margin-top: 0.5rem;
@@ -33,4 +42,46 @@ ul.notes>li{
     background-color: lightblue;
     padding: 0.5rem;
     border-radius: 3px;
+}
+input,textarea{
+    padding: 0.25rem 0.75rem;
+    display: block;
+}
+
+
+.btn{
+    width: auto;
+    padding: 0.5rem 1rem;
+    background-color: darkgoldenrod;
+    color: white;
+    font-weight: 600;
+    border: 0;
+}
+
+.w-full{
+    width: 100%;
+}
+
+.block{
+    display: block;
+}
+
+.px-2{
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+#form *+*{
+    margin-top: 0.5rem;
+}
+
+.close{
+    float: right;
+    background-color: tomato;
+    border: 0;
+    color: white;
+    font-weight: 600;
+    border-radius: 3px;
+    padding: 0.25rem 0.45rem;
+    cursor: pointer;
 }
