@@ -14,8 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
         addLog('creating db') 
         db = connResult.result
         let notesObjStr = db.createObjectStore('notes', {
-            keyPath: id,
-            keyGenerator: true
+            keyPath: 'id',
+            keyGenerator: true,
+            autoIncrement: true
         })
         db.onerror = (event) => {
             addLog('Error loading database.');
@@ -44,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         notesUl.removeChild(notesUl.firstChild);
     }
 
-    const objectStore = db.transaction('toDoList').objectStore('toDoList');
+    const objectStore = db.transaction('notes').objectStore('notes');
     objectStore.openCursor().onsuccess = (event) => {
       const cursor = event.target.result;
       // Check if there are no (more) cursor items to iterate through
@@ -75,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function addNote(text, start) {
 
-        const objectStore = db.transaction('toDoList', 'readwrite').objectStore('toDoList');
+        const objectStore = db.transaction('notes', 'readwrite').objectStore('notes');
         objectStore.add({
             start_time: start,
             end_time: start,
