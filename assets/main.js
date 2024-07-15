@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let connResult = window.indexedDB.open('notes')
 
-
+    addLog('items loaded') 
     connResult.onupgradeneeded = (ev) => {
         db = connResult.result
         let notesObjStr = db.createObjectStore('notes', {
