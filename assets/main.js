@@ -1,11 +1,12 @@
-var db
-let notesUl = document.getElementById('notesList')
-let logUl = document.getElementById('logList')
-let subBtn = document.getElementById('subBtn')
-let noteInp = document.getElementById('noteInp')
-let startInp = document.getElementById('startInp')
-
 document.addEventListener('DOMContentLoaded', () => {
+
+    var db
+    let notesUl = document.getElementById('notesList')
+    let logUl = document.getElementById('logList')
+    let subBtn = document.getElementById('subBtn')
+    let noteInp = document.getElementById('noteInp')
+    let startInp = document.getElementById('startInp')
+
     let connResult = window.indexedDB.open('notes')
 
 
@@ -35,12 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
         addNote(noteVal, startVal)
         displayNotes()
     })
-})
 
-
-
-
-function displayNotes() {
+    function displayNotes() {
     // clear existing notes first
     while (notesUl.firstChild) {
         notesUl.removeChild(notesUl.firstChild);
@@ -96,3 +93,9 @@ function createListItem(contents) {
     listItem.textContent = contents;
     return listItem;
 };
+})
+
+
+
+
+
