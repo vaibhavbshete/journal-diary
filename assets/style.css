@@ -1,8 +1,13 @@
+body{
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
 ul.log{
     border: 1px solid green;
     background-color: lightgreen;
     border-radius: 3px;
-    padding: 2rem 1rem;
+    padding: 0.75rem 0.5rem;
+    height: 4rem;
+    overflow-y: auto;
 }
 
 ul.log li+li{
@@ -11,4 +16,21 @@ ul.log li+li{
 
 ul.log>li{
     list-style-type: none;
+}
+
+ul.notes{
+   padding: 0;
+   
+}
+
+ul.notes li+li{
+    margin-top: 0.5rem;
+}
+
+ul.notes>li{
+    list-style-type: none;
+    border:1px solid blue;
+    background-color: lightblue;
+    padding: 0.5rem;
+    border-radius: 3px;
 }
