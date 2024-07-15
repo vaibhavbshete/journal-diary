@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     connResult.onsuccess = (ev) => {
         db = connResult.result
-        displayNotes()
+        displayNotes() 
     }
 
 
@@ -38,11 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 
-function createListItem(contents) {
-    const listItem = document.createElement('li');
-    listItem.textContent = contents;
-    return listItem;
-};
+
 
 function displayNotes() {
     // clear existing notes first
@@ -56,7 +52,7 @@ function displayNotes() {
       // Check if there are no (more) cursor items to iterate through
       if (!cursor) {
         // No more items to iterate through, we quit.
-        logUl.appendChild(createListItem('Entries all displayed.'));
+        addLog('Entries all displayed.');
         return;
       }
       
@@ -87,4 +83,16 @@ function addNote(text, start) {
         end_time: start,
         note: text
     });
+
+    
 }
+
+function addLog(text) {
+    logUl.appendChild(createListItem(text)); 
+}
+
+function createListItem(contents) {
+    const listItem = document.createElement('li');
+    listItem.textContent = contents;
+    return listItem;
+};
