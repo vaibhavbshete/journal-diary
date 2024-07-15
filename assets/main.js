@@ -11,13 +11,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     addLog('items loaded') 
     connResult.onupgradeneeded = (ev) => {
+        addLog('creating db') 
         db = connResult.result
         let notesObjStr = db.createObjectStore('notes', {
             keyPath: id,
             keyGenerator: true
         })
         db.onerror = (event) => {
-            logUl.appendChild(createListItem('Error loading database.'));
+            addLog('Error loading database.');
         };
         notesObjStr.createIndex('start_time','start_time',{unique:false})
         notesObjStr.createIndex('end_time','end_time',{unique:false})
@@ -62,37 +63,37 @@ document.addEventListener('DOMContentLoaded', () => {
       const listItem = createListItem(noteText);
 
 
-      // Put the item item inside the task list
-      notesUl.appendChild(listItem);
+          // Put the item item inside the task list
+          notesUl.appendChild(listItem);
 
 
-      // continue on to the next item in the cursor
-      cursor.continue();
-    };
+          // continue on to the next item in the cursor
+          cursor.continue();
+        };
   
-}
+    }
 
-function addNote(text, start) {
+    function addNote(text, start) {
 
-    const objectStore = db.transaction('toDoList', 'readwrite').objectStore('toDoList');
-    objectStore.add({
-        start_time: start,
-        end_time: start,
-        note: text
-    });
+        const objectStore = db.transaction('toDoList', 'readwrite').objectStore('toDoList');
+        objectStore.add({
+            start_time: start,
+            end_time: start,
+            note: text
+        });
 
     
-}
+    }
 
-function addLog(text) {
-    logUl.appendChild(createListItem(text)); 
-}
+    function addLog(text) {
+        logUl.appendChild(createListItem(text)); 
+    }
 
-function createListItem(contents) {
-    const listItem = document.createElement('li');
-    listItem.textContent = contents;
-    return listItem;
-};
+    function createListItem(contents) {
+        const listItem = document.createElement('li');
+        listItem.textContent = contents;
+        return listItem;
+    };
 })
 
 
