@@ -1,0 +1,14 @@
+ul.log{
+    border: 1px solid green;
+    background-color: lightgreen;
+    border-radius: 3px;
+    padding: 2rem 1rem;
+}
+
+ul.log li+li{
+    margin-top: 0.5rem;
+}
+
+ul.log>li{
+    list-style-type: none;
+}
