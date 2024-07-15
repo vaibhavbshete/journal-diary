@@ -27,6 +27,14 @@ document.addEventListener('DOMContentLoaded', () => {
         db = connResult.result
         displayNotes()
     }
+
+
+    subBtn.addEventListener('click', () => {
+        let noteVal = noteInp.value
+        let startVal = startInp.value
+        addNote(noteVal, startVal)
+        displayNotes()
+    })
 })
 
 
@@ -37,7 +45,10 @@ function createListItem(contents) {
 };
 
 function displayNotes() {
-    
+    // clear existing notes first
+    while (notesUl.firstChild) {
+        notesUl.removeChild(notesUl.firstChild);
+    }
 
     const objectStore = db.transaction('toDoList').objectStore('toDoList');
     objectStore.openCursor().onsuccess = (event) => {
@@ -69,5 +80,11 @@ function displayNotes() {
 }
 
 function addNote(text, start) {
-    
+
+    const objectStore = db.transaction('toDoList', 'readwrite').objectStore('toDoList');
+    objectStore.add({
+        start_time: start,
+        end_time: start,
+        note: text
+    });
 }
