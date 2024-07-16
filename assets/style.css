@@ -77,7 +77,7 @@ input,textarea{
 
 .close{
     float: right;
-    background-color: cornflourblue;
+    background-color: steelblue;
     border: 0;
     color: white;
     font-weight: 600;
@@ -85,9 +85,9 @@ input,textarea{
     padding: 0.25rem 0.45rem;
     cursor: pointer;
     opacity: 0;
-    transition: opacity 500ms;
+    transition: opacity 128ms;
 }
 
-li:active .close{
+li:active .close,li:hover .close{
     opacity:1
 }
