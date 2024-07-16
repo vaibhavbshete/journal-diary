@@ -38,7 +38,7 @@ ul.notes li+li{
 
 ul.notes>li{
     list-style-type: none;
-    border:1px solid blue;
+    border:1px solid steelblue;
     background-color: lightblue;
     padding: 0.5rem;
     border-radius: 3px;
