@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInputs()
     })
     function deleteNote(ev) {
-        const noteId =Number( ev.target.dataset.noteId )
+        const noteId = Number( ev.target.dataset.noteId )
         // console.log(noteId);
         const transaction = db.transaction(['notes'], 'readwrite');
         // console.log(transaction);
