@@ -32,7 +32,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install deps
-        run: npm i
+        run: npm ci
       - name: output lock
         run:  tail -1009 package-lock.json 
       - name: Build w Vite
