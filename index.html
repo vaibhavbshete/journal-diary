@@ -9,12 +9,16 @@
 </head>
 <body>
    
-    <div class="px-2" id="form">
+    <div class="px-2 pb-14" id="form">
         <textarea class="w-full block" name="note_text" id="noteInp" placeholder="note"></textarea>
         <input type="datetime-local" name="start_time" id="startInp" value="2020-01-01T00:00">
-        <button class="btn" id="subBtn" type="button">Submit</button>
+        <button class="px-2 py-1 text-slate-200 rounded bg-slate-600" id="subBtn" type="button">Submit</button>
     </div>
-    <ul class="notes px-2" id="notesList"></ul>
+    <ul class="notes px-2 space-y-2" id="notesList">
+        <template id="noteTemplate">
+            <li class="bg-blue-200 border border-blue-600"></li>
+        </template>
+    </ul>
     <div class="fixed bottom-0 w-full">
         <ul class="px-2 h-14 overflow-y-auto bg-green-900 text-green-300" id="logList"></ul>
     </div>
