@@ -6,21 +6,50 @@
     <title>Journal</title>
     <link rel="stylesheet" href="assets/style.css">
     <script type="module"  src="assets/main.js"></script>
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+        }
+    </script>
 </head>
 <body>
-   
-    <div class="px-2 pb-14" id="form">
-        <textarea class="w-full block" name="note_text" id="noteInp" placeholder="note"></textarea>
-        <input type="datetime-local" name="start_time" id="startInp" value="2020-01-01T00:00">
-        <button class="px-2 py-1 text-slate-200 rounded bg-slate-600" id="subBtn" type="button">Submit</button>
-    </div>
-    <ul class="notes px-2 space-y-2" id="notesList">
-        <template id="noteTemplate">
-            <li class="bg-blue-200 border border-blue-600"></li>
-        </template>
-    </ul>
-    <div class="fixed bottom-0 w-full">
-        <ul class="px-2 h-14 overflow-y-auto bg-green-900 text-green-300" id="logList"></ul>
-    </div>
+   <div class="bg-zinc-50 text text-zinc-700 dark:bg-zinc-700 dark:text-zinc-400 h-svh">
+       <header class="bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-400 ">
+           <div class="max-w-prose mx-auto flex justify-between px-2">
+               <h1 class="leading-[2.62]"><strong>Journal</strong>Diary</h1>
+               <menu>
+                    <button type="button" class="px-2 py-2 text-zinc-800 bg-zinc-50 dark:text-zinc-50 dark:bg-zinc-800" onclick="toggleTheme()">
+                        <span class="hidden dark:block">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                        </span>
+                        <span class="block dark:hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-moon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                        </span>
+                    </button>
+               </menu>
+           </div>
+       </header>
+        <div class="px-2 my-2 max-w-prose mx-auto" id="form">
+            <textarea class="w-full block" name="note_text" id="noteInp" placeholder="New note..."></textarea>
+            <div class="mt-2 flex gap-4 flex-wrap items-center">
+                <input type="datetime-local" name="start_time" id="startInp" value="2020-01-01T00:00">
+                <button class="px-4 py-2 text-zinc-600 bg-zinc-200 dark:text-zinc-200 dark:bg-zinc-600 border border-zinc-800" id="subBtn" type="button">Add Note</button>
+            </div>
+        </div>
+        <ul class="mt-4 px-2 space-y-4 pb-16 max-w-prose mx-auto" id="notesList">
+            <template id="noteTemplate">
+                <li class="bg-zinc-200 border text-zinc-600 dark:bg-zinc-600 dark:text-zinc-200 border-zinc-600  relative group">
+                    <header class="text-end px-2 text-sm">
+                        <time data-datetime class="text-zinc-600 dark:text-zinc-800 pe-8"></time>
+                    </header>
+                    <button class="close opacity-0 group-active:opacity-100 group-hover:opacity-100 absolute right-0 top-0 h-8 leading-8 w-8" data-close>&times;</button>
+                    <div data-note-text class="min-h-8 px-2 py-2"></div>
+                </li>
+            </template>
+        </ul>
+        <div class="fixed bottom-0 w-full bg-green-900 text-green-300">
+            <ul class="max-w-prose mx-auto px-2 h-14 overflow-y-auto " id="logList"></ul>
+        </div>
+   </div>
 </body>
 </html>

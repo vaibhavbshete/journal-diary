@@ -2,7 +2,7 @@
   "name": "journal-diary",
   "version": "1.0.0",
   "description": "A web app for simple local text-journaling",
-  "private": true, 
+  "private": true,
   "main": "",
   "scripts": {
     "dev": "vite",
@@ -10,10 +10,11 @@
     "preview": "vite preview"
   },
   "author": "Vaibhav Shete",
-  "license": "UNLICENSED", 
- "devDependencies": {
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.7",
     "autoprefixer": "^10.4.16",
     "tailwindcss": "^3.3.5",
     "vite": "^4.5.0"
- }
+  }
 }

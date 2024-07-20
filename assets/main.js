@@ -6,10 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let subBtn = document.getElementById('subBtn')
     let noteInp = document.getElementById('noteInp')
     let startInp = document.getElementById('startInp')
+    let noteTemplate = document.getElementById('noteTemplate')
 
     let connResult = window.indexedDB.open('notes')
 
     addLog('items loaded') 
+    resetForm()
     connResult.onupgradeneeded = (ev) => {
         addLog('creating db') 
         db = connResult.result
@@ -37,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let startVal = startInp.value
         addNote(noteVal, startVal)
         displayNotes()
-        clearInputs()
+        resetForm()
     })
     function deleteNote(ev) {
         const noteId = Number( ev.target.dataset.noteId )
@@ -82,15 +84,24 @@ document.addEventListener('DOMContentLoaded', () => {
             // Build the to-do list entry and put it into the list item.
             let nt = (note + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2');
             const noteText =  `${nt}`;
-            const listItem = createListItem(noteText);
-            const closeBtn = document.createElement('button');
-            closeBtn.innerHTML = '&times;';
-            closeBtn.classList.add('close');
+            // const listItem = createListItem(noteText);
+            const listItem = noteTemplate.content.cloneNode(true)
+            // console.log(listItem);
+            // listItem.append
+            const closeBtn = listItem.querySelector('button[data-close]')
+            // console.log(closeBtn);
+            const textHolder = listItem.querySelector('div[data-note-text]')
+            const dateHolder = listItem.querySelector('[data-datetime]')
+            textHolder.innerHTML = noteText;
+            dateHolder.innerHTML = (new Date(start_time).toLocaleDateString());
+            // const note
+            // closeBtn.innerHTML = '&times;';
+            // closeBtn.classList.add('close');
             closeBtn.dataset.noteId = cursor.primaryKey;
             closeBtn.addEventListener('click', (ev) => {
                 deleteNote(ev);
             });
-            listItem.prepend(closeBtn);
+            // listItem.prepend(closeBtn);
 
 
             // Put the item item inside the task list
@@ -134,6 +145,11 @@ document.addEventListener('DOMContentLoaded', () => {
         listItem.innerHTML = contents;
         return listItem;
     };
+
+    function resetForm() {
+        noteInp.value = ''
+        startInp.value = new Date().toISOString().slice(0, 16) // 2024-07-20T10:00
+    }
 })
 
 
