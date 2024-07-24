@@ -67,7 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
 
         const objectStore = db.transaction('notes').objectStore('notes');
-        objectStore.openCursor().onsuccess = (event) => {
+        const request = objectStore.index("start_time").openCursor()
+        request.onsuccess = (event) => {
             const cursor = event.target.result;
             // Check if there are no (more) cursor items to iterate through
             if (!cursor) {
