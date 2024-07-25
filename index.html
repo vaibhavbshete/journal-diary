@@ -22,7 +22,7 @@
     </script>
 </head>
 <body class="dark">
-   <div class="bg-zinc-50 text text-zinc-700 dark:bg-zinc-700 dark:text-zinc-400 h-vh">
+   <div class="bg-zinc-50 text text-zinc-700 dark:bg-zinc-700 dark:text-zinc-400 h-screen overflow-y-auto">
        <header class="bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-400 ">
            <div class="max-w-prose mx-auto flex justify-between px-2">
                <h1 class="leading-[2.62]"><strong>Journal</strong>Diary</h1>
@@ -45,7 +45,7 @@
                 <button class="px-4 py-2 text-zinc-700 bg-zinc-200 dark:text-zinc-200 dark:bg-zinc-700 border border-zinc-500 dark:border-zinc-400" id="subBtn" type="button">Add Note</button>
             </div>
         </div>
-        <ul class="mt-4 px-2 space-y-4 pb-16 max-w-prose mx-auto h-full overflow-y-auto" id="notesList">
+        <ul class="mt-4 px-2 pb-2 space-y-4 max-w-prose mx-auto overflow-y-auto" id="notesList">
             <template id="noteTemplate">
                 <li class="bg-zinc-200 border text-zinc-600 dark:bg-zinc-600 dark:text-zinc-200 border-zinc-600  relative group">
                     <header class="text-end px-2 text-sm bg-zinc-300 dark:bg-zinc-700">
@@ -56,9 +56,10 @@
                 </li>
             </template>
         </ul>
-        <div class="fixed bottom-0 w-full bg-green-900 text-green-300">
+        <details class="sticky bottom-0 w-full bg-teal-900 text-teal-300">
+            <summary class="max-w-prose mx-auto px-2 list-">Log</summary>
             <ul class="max-w-prose mx-auto px-2 h-14 overflow-y-auto " id="logList"></ul>
-        </div>
+        </details>
    </div>
    <script>
     
