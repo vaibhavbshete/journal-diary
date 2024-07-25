@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
-
+    addLog('DOM Content loaded') 
     var db
     let notesUl = document.getElementById('notesList')
-    let logUl = document.getElementById('logList')
+   
     let subBtn = document.getElementById('subBtn')
     let noteInp = document.getElementById('noteInp')
     let startInp = document.getElementById('startInp')
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let connResult = window.indexedDB.open('notes')
 
-    addLog('items loaded') 
+    
     resetForm()
     connResult.onupgradeneeded = (ev) => {
         addLog('creating db') 
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Check if there are no (more) cursor items to iterate through
             if (!cursor) {
                 // No more items to iterate through, we quit.
-                addLog('Entries all displayed.');
+                addLog('All entries displayed.');
                 return;
             }
         
@@ -138,6 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function addLog(text) {
+        let logUl = document.getElementById('logList')
         logUl.appendChild(createListItem(text)); 
     }
 
