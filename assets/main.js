@@ -6,12 +6,27 @@ document.addEventListener('DOMContentLoaded', () => {
     let subBtn = document.getElementById('subBtn')
     let noteInp = document.getElementById('noteInp')
     let startInp = document.getElementById('startInp')
+    let formDateButton = document.getElementById('formDateBtn')
     let noteTemplate = document.getElementById('noteTemplate')
 
     let connResult = window.indexedDB.open('notes')
 
+    formDateButton.addEventListener('click',()=> startInp.showPicker())
+    startInp.addEventListener('change', displayFormDateTime)
+
+    function displayFormDateTime() {
+
+        let enteredDate = startInp.value!='' ? (new Date(startInp.value)) : (new Date())
+        // console.log(enteredDate);
+        let dateDisplay = document.querySelector('[data-form-date-display]')
+        let timeDisplay = document.querySelector('[data-form-time-display]')
+        dateDisplay.textContent = formatEpicDate(enteredDate)
+        timeDisplay.textContent = formatTime(enteredDate)
+    }
+
     
     resetForm()
+    displayFormDateTime()
     connResult.onupgradeneeded = (ev) => {
         addLog('creating db') 
         db = connResult.result
