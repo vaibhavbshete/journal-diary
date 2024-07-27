@@ -169,6 +169,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function resetForm() {
         noteInp.value = ''
+        
+        let dt = new Date()
+        let dtStr = dt.getFullYear() + '-' + ((dt.getMonth() + 1).toString().padStart(2, '0')) + '-' + dt.getDate() + 'T' + (dt.getHours().toString().padStart(2, '0')) + ':' + (dt.getMinutes().toString().padStart(2, '0'))
+        // console.log(dtStr);
+        startInp.value = dtStr
     }
 
     /**
