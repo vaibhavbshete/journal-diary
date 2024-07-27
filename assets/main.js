@@ -92,9 +92,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const closeBtn = listItem.querySelector('button[data-close]')
             // console.log(closeBtn);
             const textHolder = listItem.querySelector('div[data-note-text]')
-            const dateHolder = listItem.querySelector('[data-datetime]')
+            const dateHolder = listItem.querySelector('[data-date]')
+            const timeHolder = listItem.querySelector('[data-time]')
+            const dateTimeWrapper = listItem.querySelector('[data-date-time-wrapper]')
             textHolder.innerHTML = noteText;
-            dateHolder.innerHTML = (new Date(start_time).toLocaleDateString());
+            dateHolder.innerHTML = formatEpicDate(new Date(start_time))
+            timeHolder.innerHTML = formatTime(new Date(start_time))
+            dateTimeWrapper.dateTime = new Date(start_time).toISOString()
             // const note
             // closeBtn.innerHTML = '&times;';
             // closeBtn.classList.add('close');
@@ -150,7 +154,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function resetForm() {
         noteInp.value = ''
-        startInp.value = new Date().toISOString().slice(0, 16) // 2024-07-20T10:00
+    }
+
+    /**
+     * Formats date to an epic readable format, like in a storybook
+     * @param {Date} $dateTime 
+     */
+    function formatEpicDate(dateTime) {
+        let datePart = dateTime.toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            // hour: '2-digit',
+            // minute: '2-digit',
+        });
+        
+        return datePart 
+    }
+
+    function formatTime(dateTime) {
+        let bigHour = dateTime.getHours()
+        let amPm = bigHour >= 12 ? 'PM' : 'AM'
+        let smallHour = bigHour > 12 ? bigHour - 12 : bigHour
+        let timePart = smallHour.toString().padStart(2, '0') + ':' + dateTime.getMinutes().toString().padStart(2, '0') + amPm;
+        return timePart
     }
 })
 
