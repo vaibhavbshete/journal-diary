@@ -52,10 +52,10 @@
                </menu>
            </div>
        </header>
-        <div class="px-2 my-2 max-w-prose mx-auto" id="form">
-            <div class="group relative border ring-1 border-zinc-400 ring-zinc-400 focus-within:border-zinc-800 focus-within:ring-zinc-800 dark:border-zinc-200 dark:ring-zinc-200 dark:focus-within:border-zinc-300 dark:focus-within:ring-zinc-300 ">
-                <div class="block w-full px-2 text-sm bg-white dark:bg-zinc-600 text-zinc-600 dark:text-zinc-400 relative" >
-                    <button class="absolute top-0 right-0 px-2" id="formDateBtn">
+        <div class="px-2 my-2 max-w-prose mx-auto dark:text-zinc-200 dark:bg-zinc-700" id="form">
+            <div class="group px-6 py-12 relative  bg-white dark:bg-zinc-600 border ring-1 border-zinc-400 ring-zinc-400 focus-within:border-zinc-800 focus-within:ring-zinc-800 dark:border-zinc-400 dark:ring-zinc-400 dark:focus-within:border-zinc-300 dark:focus-within:ring-zinc-300 ">
+                <div class="block w-max absolute top-0 right-0 px-2 text-sm bg-transparent  text-zinc-600 dark:text-zinc-400" >
+                    <button class="py-1 px-2" id="formDateBtn">
                         <time data-form-date-time-wrapper class="text-start inline-block">
                             <span data-form-date-display></span><br>
                             <span data-form-time-display></span>
@@ -63,23 +63,23 @@
                     </button>
                     <input id="startInp" class="bg-zinc-100 text-zinc-800 absolute left-1/2 h-0 w-1/2 opacity-0 m-0 p-0 focus:border-zinc-800 focus:ring-zinc-800 dark:focus:border-zinc-300 dar:focus:ring-zinc-300 dark:bg-zinc-800 dark:text-zinc-300" type="datetime-local" name="start_time" value="2020-01-01T00:00">
                 </div>
-                <textarea class="pt-12 w-full block  bg-white text-zinc-800 border-0 ring-0  focus:border-0 focus:ring-0  dark:bg-zinc-800 dark:text-zinc-300 placeholder:text-zinc-300 dark:placeholder:text-zinc-500" name="note_text" id="noteInp" placeholder="New note..."></textarea>
+                <textarea class="px-2 py-4 w-full block  bg-transparent text-zinc-800 border-zinc-200 dark:border-zinc-500 focus:border focus:border-zinc-200 ring-0 focus:ring-0  dark:text-zinc-200  placeholder:text-zinc-300 dark:placeholder:text-zinc-500" name="note_text" id="noteInp" placeholder="New note..."></textarea>
             </div>
             <div class="mt-2 flex gap-4 flex-wrap items-center">
                 <button class="px-4 py-2 text-zinc-700 bg-zinc-200 dark:text-zinc-200 dark:bg-zinc-700 border border-zinc-500 dark:border-zinc-400" id="subBtn" type="button">Add Note</button>
             </div>
         </div>
         <template id="noteTemplate">
-            <li class="bg-white border text-zinc-600 dark:bg-zinc-600 dark:text-zinc-200 border-zinc-600 group relative">
-                <header class="text-end px-2 text-sm bg-white dark:bg-zinc-600 text-zinc-600 dark:text-zinc-400">
+            <li class="px-6 py-12 bg-white border text-zinc-600 dark:bg-zinc-600 dark:text-zinc-200 border-zinc-600 group relative">
+                <header class="absolute top-0 right-0 text-end px-2 py-1 text-sm bg-white dark:bg-zinc-600 text-zinc-600 dark:text-zinc-400">
                     <time data-date-time-wrapper class="text-start inline-block">
                         <span data-date></span><br>
                         <span data-time></span>
                     </time>
                 </header>
                 <button class="close opacity-0 group-active:opacity-100 group-hover:opacity-100 absolute right-0 bottom-0 h-8 leading-8 w-8" data-close>&times;</button>
-                <div data-note-text class="min-h-8 px-6"></div>
-                <footer>&nbsp;<br>&nbsp;</footer>
+                <div data-note-text class="min-h-10 px-2 py-4 border border-zinc-200 dark:border-zinc-500"></div>
+                <!-- <footer>&nbsp;<br>&nbsp;</footer> -->
             </li>
         </template>
         <ul class="mt-4 px-2 pb-2 space-y-4 max-w-prose mx-auto overflow-y-auto" id="notesList">
