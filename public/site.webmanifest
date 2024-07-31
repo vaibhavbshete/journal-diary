@@ -1,0 +1,20 @@
+{
+    "name": "Journal Diary",
+    "short_name": "Journal Diary",
+    "icons": [
+        {
+            "src": "/journal-diary/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/journal-diary/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#dc8735",
+    "background_color": "#dc8735",
+    "start_url": "https://vaibhavbshete.github.io/journal-diary/",
+    "display": "standalone"
+}
