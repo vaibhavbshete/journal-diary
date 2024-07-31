@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const dateTimeWrapper = listItem.querySelector('[data-date-time-wrapper]')
             textHolder.innerHTML = noteText;
             dateHolder.innerHTML = (new Date(start_time)).getDay()
-            timeHolder.innerHTML = (new Date(start_time)).getMonth()
+            timeHolder.innerHTML = (new Date(start_time)).toLocaleString('en-US', {month:'short'}) 
             dateTimeWrapper.dateTime = new Date(start_time).toISOString()
             // const note
             // closeBtn.innerHTML = '&times;';
