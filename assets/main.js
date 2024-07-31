@@ -107,12 +107,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const closeBtn = listItem.querySelector('button[data-close]')
             // console.log(closeBtn);
             const textHolder = listItem.querySelector('div[data-note-text]')
-            const dateHolder = listItem.querySelector('[data-date]')
-            const timeHolder = listItem.querySelector('[data-time]')
+            const dateHolder = listItem.querySelector('[data-day]')
+            const timeHolder = listItem.querySelector('[data-month]')
             const dateTimeWrapper = listItem.querySelector('[data-date-time-wrapper]')
             textHolder.innerHTML = noteText;
-            dateHolder.innerHTML = formatEpicDate(new Date(start_time))
-            timeHolder.innerHTML = formatTime(new Date(start_time))
+            dateHolder.innerHTML = (new Date(start_time)).getDay()
+            timeHolder.innerHTML = (new Date(start_time)).getMonth()
             dateTimeWrapper.dateTime = new Date(start_time).toISOString()
             // const note
             // closeBtn.innerHTML = '&times;';
