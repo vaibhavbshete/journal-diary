@@ -19,6 +19,7 @@
                 document.body.classList.add('dark');
             }
         }
+        
     </script>
 
     <!-- favicons -->
@@ -49,9 +50,17 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-moon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
                         </span>
                     </button>
+                    <button type="button" class="px-2 py-2 text-zinc-800 bg-zinc-50 dark:text-zinc-50 dark:bg-zinc-800" onclick="toggleInfo()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> 
+                    </button>
                </menu>
            </div>
        </header>
+       <div id="infoBar" class="px-2 py-1 border border-zinc-600  hidden " >
+           Another rectangle! Had you guessed?<br>
+           Write anything. Nothing gets sent to the servers. It's actually a static site. Everything goes when you clear browser cache.<br>
+           If you haven't been able to tell by now, this is a work in progress. Use considering that all that you've written can be lost in the next update.
+       </div>
         <div class="px-2 my-2 max-w-prose mx-auto dark:text-zinc-200 dark:bg-zinc-700" id="form">
             <div class="group px-6 py-12 relative  bg-white dark:bg-zinc-600 border ring-1 border-zinc-400 ring-zinc-400 focus-within:border-zinc-800 focus-within:ring-zinc-800 dark:border-zinc-400 dark:ring-zinc-400 dark:focus-within:border-zinc-300 dark:focus-within:ring-zinc-300 ">
                 <div class="block w-max absolute top-0 right-0 px-2 text-sm bg-transparent  text-zinc-600 dark:text-zinc-400" >
@@ -105,6 +114,10 @@
         document.body.classList.toggle('dark', theme === 'dark');
     }
     setDarkTheme()
+
+    function toggleInfo() {
+        infoBar.classList.toggle('hidden')
+    }
    </script>
 </body>
 </html>
