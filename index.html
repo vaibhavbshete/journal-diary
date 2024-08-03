@@ -72,15 +72,22 @@
            </div>
         </div>
         <div class="px-2 my-2 max-w-prose mx-auto dark:text-zinc-200 dark:bg-zinc-700" id="form">
-            <div class="group px-6 py-12 relative  bg-white dark:bg-zinc-600 border ring-1 border-zinc-400 ring-zinc-400 focus-within:border-zinc-800 focus-within:ring-zinc-800 dark:border-zinc-400 dark:ring-zinc-400 dark:focus-within:border-zinc-300 dark:focus-within:ring-zinc-300 ">
-                <div class="block w-max absolute top-0 right-0 px-2 text-sm bg-transparent  text-zinc-600 dark:text-zinc-400" >
-                    <button class="py-1 px-2" id="formDateBtn">
-                        <time data-form-date-time-wrapper class="text-start inline-block">
-                            <span data-form-date-display></span><br>
-                            <span data-form-time-display></span>
-                        </time>
-                    </button>
-                    <input id="startInp" class="bg-zinc-100 text-zinc-800 absolute left-1/2 h-0 w-1/2 opacity-0 m-0 p-0 focus:border-zinc-800 focus:ring-zinc-800 dark:focus:border-zinc-300 dar:focus:ring-zinc-300 dark:bg-zinc-800 dark:text-zinc-300" type="datetime-local" name="start_time" value="2020-01-01T00:00">
+            <div class="group px-6 pb-12 relative  bg-white dark:bg-zinc-600 border ring-1 border-zinc-400 ring-zinc-400 focus-within:border-zinc-800 focus-within:ring-zinc-800 dark:border-zinc-400 dark:ring-zinc-400 dark:focus-within:border-zinc-300 dark:focus-within:ring-zinc-300 ">
+                <div class="flex justify-end ">
+                    <div class="block  text-zinc-600 dark:text-zinc-400" >
+                        <button class="py-1" id="formDateBtn">
+                            <time data-form-date-time-wrapper class="text-start inline-block">
+                                <div class="flex gap-1 ">
+                                    <span data-form-display="date" class="font-bold text-4xl " ></span>
+                                    <div class="flex flex-col">
+                                        <span data-form-display="month" class="block text-sm font-bold uppercase relative top-[0.125rem]" ></span>
+                                        <span data-form-display="weekday" class="block text-xs relative bottom-[0.187rem] " ></span>
+                                    </div>
+                                </div>
+                            </time>
+                        </button>
+                        <input id="startInp" class="bg-zinc-100 text-zinc-800 absolute left-1/2 h-0 w-1/2 opacity-0 m-0 p-0 focus:border-zinc-800 focus:ring-zinc-800 dark:focus:border-zinc-300 dar:focus:ring-zinc-300 dark:bg-zinc-800 dark:text-zinc-300" type="datetime-local" name="start_time" value="2020-01-01T00:00">
+                    </div>
                 </div>
                 <textarea class="px-2 py-4 w-full block  bg-transparent text-zinc-800 border-zinc-200 dark:border-zinc-500 focus:border focus:border-zinc-200 ring-0 focus:ring-0  dark:text-zinc-200  placeholder:text-zinc-300 dark:placeholder:text-zinc-500" name="note_text" id="noteInp" placeholder="New note..."></textarea>
             </div>

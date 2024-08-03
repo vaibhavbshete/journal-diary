@@ -18,10 +18,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let enteredDate = startInp.value!='' ? (new Date(startInp.value)) : (new Date())
         // console.log(enteredDate);
-        let dateDisplay = document.querySelector('[data-form-date-display]')
-        let timeDisplay = document.querySelector('[data-form-time-display]')
-        dateDisplay.textContent = formatEpicDate(enteredDate)
-        timeDisplay.textContent = formatTime(enteredDate)
+        let monthDayDisplay = document.querySelector('[data-form-display="date"]')
+        let monthDisplay = document.querySelector('[data-form-display="month"]')
+        let weekDayDisplay = document.querySelector('[data-form-display="weekday"]')
+
+        let formDateParts = dateParts(enteredDate)
+        monthDayDisplay && (monthDayDisplay.innerText = formDateParts.date)
+        weekDayDisplay && (weekDayDisplay.innerText = formDateParts.weekday)
+        monthDisplay && (monthDisplay.innerText = formDateParts.month)
+        
     }
 
     
@@ -110,11 +115,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const weekDayHolder = listItem.querySelector('[data-weekday]')
             const monthDayHolder = listItem.querySelector('[data-day]')
             const monthHolder = listItem.querySelector('[data-month]')
+            const yearHolder = listItem.querySelector('[data-year]')
+            
             const dateTimeWrapper = listItem.querySelector('[data-date-time-wrapper]')
             textHolder && (textHolder.innerHTML = noteText);
-            monthDayHolder && (monthDayHolder.innerHTML = (new Date(start_time)).getDate())
-            monthHolder && (monthHolder.innerHTML = (new Date(start_time)).toLocaleString('en-US', { month: 'short' }) )
-            weekDayHolder && (weekDayHolder.innerHTML = (new Date(start_time)).toLocaleString('en-US', { weekday: 'short' }))
+
+            let currentDateParts = dateParts(new Date(start_time))
+            monthDayHolder && (monthDayHolder.innerHTML = currentDateParts.date )
+            monthHolder && (monthHolder.innerHTML = (currentDateParts.month ) )
+            weekDayHolder && (weekDayHolder.innerHTML = currentDateParts.weekday)
+            yearHolder && (yearHolder.innerHTML = currentDateParts.year)
+            
             dateTimeWrapper && (dateTimeWrapper.dateTime = new Date(start_time).toISOString())
             // const note
             // closeBtn.innerHTML = '&times;';
@@ -202,6 +213,16 @@ document.addEventListener('DOMContentLoaded', () => {
         let timePart = smallHour.toString().padStart(2, '0') + ':' + dateTime.getMinutes().toString().padStart(2, '0') + amPm;
         return timePart
     }
+
+    function dateParts(date) {
+        return {
+            date: date.getDate(),
+            month: date.toLocaleString('en-US', { month: 'short' }),
+            weekday: date.toLocaleString('en-US', { weekday: 'short' }),
+            year: date.getFullYear()
+        }
+    }
+        
 })
 
 
