@@ -13,8 +13,8 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#dc8735",
-    "background_color": "#dc8735",
+    "theme_color": "#3f3f46",
+    "background_color": "#3f3f46",
     "start_url": "https://vaibhavbshete.github.io/journal-diary/",
     "display": "standalone"
 }
