@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let monthDisplay = document.querySelector('[data-form-display="month"]')
         let weekDayDisplay = document.querySelector('[data-form-display="weekday"]')
 
-        let formDateParts = dateParts(enteredDate)
+        let formDateParts = getDateParts(enteredDate)
         monthDayDisplay && (monthDayDisplay.innerText = formDateParts.date)
         weekDayDisplay && (weekDayDisplay.innerText = formDateParts.weekday)
         monthDisplay && (monthDisplay.innerText = formDateParts.month)
@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const dateTimeWrapper = listItem.querySelector('[data-date-time-wrapper]')
             textHolder && (textHolder.innerHTML = noteText);
 
-            let currentDateParts = dateParts(new Date(start_time))
+            let currentDateParts = getDateParts(new Date(start_time))
             monthDayHolder && (monthDayHolder.innerHTML = currentDateParts.date )
             monthHolder && (monthHolder.innerHTML = (currentDateParts.month ) )
             weekDayHolder && (weekDayHolder.innerHTML = currentDateParts.weekday)
@@ -214,9 +214,14 @@ document.addEventListener('DOMContentLoaded', () => {
         return timePart
     }
 
-    function dateParts(date) {
+    /**
+     * 
+     * @param {Date} date 
+     * @returns {Object {date, month, weekday, year}}
+     */
+    function getDateParts(date) {
         return {
-            date: date.getDate(),
+            date: date.getDate().toString().padStart(2, '0'),
             month: date.toLocaleString('en-US', { month: 'short' }),
             weekday: date.toLocaleString('en-US', { weekday: 'short' }),
             year: date.getFullYear()
