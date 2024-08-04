@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let startInp = document.getElementById('startInp')
     let formDateButton = document.getElementById('formDateBtn')
     let noteTemplate = document.getElementById('noteTemplate')
+    let emptyNotesTemplate = document.getElementById('noNotesTemp')
 
     let connResult = window.indexedDB.open('notes')
 
@@ -85,65 +86,76 @@ document.addEventListener('DOMContentLoaded', () => {
             notesUl.removeChild(notesUl.firstChild);
         }
         
-
-        const objectStore = db.transaction('notes').objectStore('notes');
-        const request = objectStore.index("start_time").openCursor(null, "next" )
-        request.onsuccess = (event) => {
-            const cursor = event.target.result;
-            // Check if there are no (more) cursor items to iterate through
-            if (!cursor) {
-                // No more items to iterate through, we quit.
-                addLog('All entries displayed.');
-                return;
+        let countRes = db.transaction('notes').objectStore('notes').count()
+        countRes.onsuccess = (event) => {
+            console.log('count', event.target.result);
+            if (event.target.result == 0) {
+                let emptyNotesLi = emptyNotesTemplate.content.cloneNode(true)
+                notesUl.appendChild(emptyNotesLi)
             }
+            else {
+                
+                
+                const objectStore = db.transaction('notes').objectStore('notes');
+                const request = objectStore.index("start_time").openCursor(null, "next" )
+                request.onsuccess = (event) => {
+                    const cursor = event.target.result;
+                    // Check if there are no (more) cursor items to iterate through
+                    if (!cursor) {
+                        // No more items to iterate through, we quit.
+                        addLog('All entries displayed.');
+                        return;
+                    }
+                
+                    // Check which suffix the deadline day of the month needs
+                    const { start_time, end_time, note } = cursor.value;
+                
+                    
         
-            // Check which suffix the deadline day of the month needs
-            const { start_time, end_time, note } = cursor.value;
+                    // Build the to-do list entry and put it into the list item.
+                    let nt = (note + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2');
+                    const noteText =  `${nt}`;
+                    // const listItem = createListItem(noteText);
+                    const listItem = noteTemplate.content.cloneNode(true)
+                    // console.log(listItem);
+                    // listItem.append
+                    const closeBtn = listItem.querySelector('button[data-close]')
+                    // console.log(closeBtn);
+                    const textHolder = listItem.querySelector('div[data-note-text]')
+                    const weekDayHolder = listItem.querySelector('[data-weekday]')
+                    const monthDayHolder = listItem.querySelector('[data-day]')
+                    const monthHolder = listItem.querySelector('[data-month]')
+                    const yearHolder = listItem.querySelector('[data-year]')
+                    
+                    const dateTimeWrapper = listItem.querySelector('[data-date-time-wrapper]')
+                    textHolder && (textHolder.innerHTML = noteText);
         
-            
-
-            // Build the to-do list entry and put it into the list item.
-            let nt = (note + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2');
-            const noteText =  `${nt}`;
-            // const listItem = createListItem(noteText);
-            const listItem = noteTemplate.content.cloneNode(true)
-            // console.log(listItem);
-            // listItem.append
-            const closeBtn = listItem.querySelector('button[data-close]')
-            // console.log(closeBtn);
-            const textHolder = listItem.querySelector('div[data-note-text]')
-            const weekDayHolder = listItem.querySelector('[data-weekday]')
-            const monthDayHolder = listItem.querySelector('[data-day]')
-            const monthHolder = listItem.querySelector('[data-month]')
-            const yearHolder = listItem.querySelector('[data-year]')
-            
-            const dateTimeWrapper = listItem.querySelector('[data-date-time-wrapper]')
-            textHolder && (textHolder.innerHTML = noteText);
-
-            let currentDateParts = getDateParts(new Date(start_time))
-            monthDayHolder && (monthDayHolder.innerHTML = currentDateParts.date )
-            monthHolder && (monthHolder.innerHTML = (currentDateParts.month ) )
-            weekDayHolder && (weekDayHolder.innerHTML = currentDateParts.weekday)
-            yearHolder && (yearHolder.innerHTML = currentDateParts.year)
-            
-            dateTimeWrapper && (dateTimeWrapper.dateTime = new Date(start_time).toISOString())
-            // const note
-            // closeBtn.innerHTML = '&times;';
-            // closeBtn.classList.add('close');
-            closeBtn.dataset.noteId = cursor.primaryKey;
-            closeBtn.addEventListener('click', (ev) => {
-                deleteNote(ev);
-            });
-            // listItem.prepend(closeBtn);
-
-
-            // Put the item item inside the task list
-            notesUl.appendChild(listItem);
-
-
-            // continue on to the next item in the cursor
-            cursor.continue();
-        };
+                    let currentDateParts = getDateParts(new Date(start_time))
+                    monthDayHolder && (monthDayHolder.innerHTML = currentDateParts.date )
+                    monthHolder && (monthHolder.innerHTML = (currentDateParts.month ) )
+                    weekDayHolder && (weekDayHolder.innerHTML = currentDateParts.weekday)
+                    yearHolder && (yearHolder.innerHTML = currentDateParts.year)
+                    
+                    dateTimeWrapper && (dateTimeWrapper.dateTime = new Date(start_time).toISOString())
+                    // const note
+                    // closeBtn.innerHTML = '&times;';
+                    // closeBtn.classList.add('close');
+                    closeBtn.dataset.noteId = cursor.primaryKey;
+                    closeBtn.addEventListener('click', (ev) => {
+                        deleteNote(ev);
+                    });
+                    // listItem.prepend(closeBtn);
+        
+        
+                    // Put the item item inside the task list
+                    notesUl.appendChild(listItem);
+        
+        
+                    // continue on to the next item in the cursor
+                    cursor.continue();
+                };
+            }
+        }
   
     }
 
