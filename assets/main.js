@@ -61,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
         addNote(noteVal, startVal)
         displayNotes()
         resetForm()
+        displayFormDateTime()
     })
     function deleteNote(ev) {
         const noteId = Number( ev.target.dataset.noteId )
