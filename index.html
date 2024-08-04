@@ -79,8 +79,8 @@
             <div class="group px-6 pb-12 relative  bg-white dark:bg-zinc-600 border ring-1 border-zinc-400 ring-zinc-400 focus-within:border-zinc-800 focus-within:ring-zinc-800 dark:border-zinc-400 dark:ring-zinc-400 dark:focus-within:border-zinc-300 dark:focus-within:ring-zinc-300 ">
                 <div class="flex justify-end ">
                     <div class="block  text-zinc-600 dark:text-zinc-400" >
-                        <button class="py-1" id="formDateBtn">
-                            <time data-form-date-time-wrapper class="text-start inline-block">
+                        <button class="py-1 text-left" id="formDateBtn">
+                            <div data-form-date-time-wrapper class="flex gap-1">
                                 <div class="flex gap-1 ">
                                     <span data-form-display="date" class="font-bold text-4xl " ></span>
                                     <div class="flex flex-col">
@@ -88,7 +88,7 @@
                                         <span data-form-display="weekday" class="block text-xs relative bottom-[0.187rem] " ></span>
                                     </div>
                                 </div>
-                            </time>
+                            </div>
                         </button>
                         <input id="startInp" class="bg-zinc-100 text-zinc-800 absolute left-1/2 h-0 w-1/2 opacity-0 m-0 p-0 focus:border-zinc-800 focus:ring-zinc-800 dark:focus:border-zinc-300 dar:focus:ring-zinc-300 dark:bg-zinc-800 dark:text-zinc-300" type="datetime-local" name="start_time" value="2020-01-01T00:00">
                     </div>
