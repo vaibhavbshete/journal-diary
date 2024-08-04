@@ -37,11 +37,11 @@
     <!-- end favicons -->
 </head>
 <body class="dark">
-   <div class="bg-zinc-50 text text-zinc-700 dark:bg-zinc-700 dark:text-zinc-400 h-dvh min-h-dvh overflow-y-auto">
-       <header class="bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-400 ">
-           <div class="max-w-prose mx-auto flex justify-between px-2">
-               <h1 class="leading-[2.62]"><strong>Journal</strong>Diary</h1>
-               <menu>
+    <div class="bg-zinc-50 text text-zinc-700 dark:bg-zinc-700 dark:text-zinc-400 h-dvh  overflow-y-auto">
+        <header class="bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-400 ">
+            <div class="max-w-prose mx-auto flex justify-between px-2">
+                <h1 class="leading-[2.62]"><strong>Journal</strong>Diary</h1>
+                <menu>
                     <button type="button" class="px-2 py-2 text-zinc-800 bg-zinc-50 dark:text-zinc-50 dark:bg-zinc-800" onclick="toggleTheme()">
                         <span class="hidden dark:block">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
@@ -53,10 +53,10 @@
                     <button type="button" class="px-2 py-2 text-zinc-800 bg-zinc-50 dark:text-zinc-50 dark:bg-zinc-800" onclick="toggleInfo()">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> 
                     </button>
-               </menu>
-           </div>
-       </header>
-       <div id="infoBar" class="max-w-prose mx-auto px-2 my-2 hidden " >
+                </menu>
+            </div>
+        </header>
+        <div id="infoBar" class="max-w-prose mx-auto px-2 my-2 hidden " >
            <div class=" border border-zinc-600 px-4 py-4" >
                 <p class=" mb-2" >
                     Another rectangle! Had you guessed?
@@ -123,8 +123,8 @@
             <summary class="max-w-prose mx-auto px-2 list-">Log</summary>
             <ul class="max-w-prose mx-auto px-2 h-14 overflow-y-auto " id="logList"></ul>
         </details>
-   </div>
-   <script>
+    </div>
+    <script>
     
     function setDarkTheme(){
         // get system preference for default theme
