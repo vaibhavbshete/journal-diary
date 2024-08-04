@@ -79,7 +79,7 @@
             <div class="group px-6 pb-12 relative  bg-white dark:bg-zinc-600 border ring-1 border-zinc-400 ring-zinc-400 focus-within:border-zinc-800 focus-within:ring-zinc-800 dark:border-zinc-400 dark:ring-zinc-400 dark:focus-within:border-zinc-300 dark:focus-within:ring-zinc-300 ">
                 <div class="flex justify-end ">
                     <div class="block  text-zinc-600 dark:text-zinc-400" >
-                        <button class="py-1 text-left" id="formDateBtn">
+                        <button class="py-1 text-left hover:bg-zinc-300" id="formDateBtn">
                             <span data-form-date-time-wrapper class="flex gap-1">
                                 <span class="flex gap-1 ">
                                     <span data-form-display="date" class="font-bold text-4xl " ></span>
@@ -94,9 +94,9 @@
                     </div>
                 </div>
                 <textarea class="px-2 py-4 w-full block  bg-transparent text-zinc-800 border-zinc-200 dark:border-zinc-500 focus:border focus:border-zinc-200 ring-0 focus:ring-0  dark:text-zinc-200  placeholder:text-zinc-300 dark:placeholder:text-zinc-500" name="note_text" id="noteInp" placeholder="New note..."></textarea>
-            </div>
-            <div class="mt-2 flex gap-4 flex-wrap items-center">
-                <button class="px-4 py-2 text-zinc-700 bg-zinc-200 dark:text-zinc-200 dark:bg-zinc-700 border border-zinc-500 dark:border-zinc-400" id="subBtn" type="button">Add Note</button>
+                <div class="mt-2 flex gap-4 flex-wrap items-center">
+                    <button class="px-4 py-2 text-zinc-700 bg-zinc-200 hover:bg-zinc-300 active:bg-zinc-300 dark:text-zinc-200 dark:bg-zinc-700 dark:hover:bg-zinc-800 dark:active:bg-zinc-800" id="subBtn" type="button">Add Note</button>
+                </div>
             </div>
         </div>
         <template id="noteTemplate">
