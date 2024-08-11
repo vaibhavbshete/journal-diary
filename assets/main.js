@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
     }
 
-    
     resetForm()
     displayFormDateTime()
     connResult.onupgradeneeded = (ev) => {
@@ -63,24 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resetForm()
         displayFormDateTime()
     })
-    function deleteNote(ev) {
-        const noteId = Number( ev.target.dataset.noteId )
-        // console.log(noteId);
-        const transaction = db.transaction(['notes'], 'readwrite');
-        // console.log(transaction);
-        const delres = transaction.objectStore('notes').delete(noteId)
-        // console.log('delres',delres);
-        const parentElement = ev.target.parentElement
-        delres.onsuccess = (ev) => {
-            // console.log('compl',ev);
-            displayNotes()
-        }
-        // transaction.oncomplete = ((event) => {
-        //     event.target.parentElement.remove();
-        // })
-        // addLog('Error deleting note.');
-
-    }
+    
     function displayNotes() {
         // clear existing notes first
         while (notesUl.firstChild) {
@@ -160,8 +142,6 @@ document.addEventListener('DOMContentLoaded', () => {
   
     }
 
-   
-
     function addNote(text, start) {
         if(text === '' || start === '') {
             return
@@ -173,7 +153,25 @@ document.addEventListener('DOMContentLoaded', () => {
             note: text
         });
 
-    
+    }
+
+    function deleteNote(ev) {
+        const noteId = Number( ev.target.dataset.noteId )
+        // console.log(noteId);
+        const transaction = db.transaction(['notes'], 'readwrite');
+        // console.log(transaction);
+        const delres = transaction.objectStore('notes').delete(noteId)
+        // console.log('delres',delres);
+        const parentElement = ev.target.parentElement
+        delres.onsuccess = (ev) => {
+            // console.log('compl',ev);
+            displayNotes()
+        }
+        // transaction.oncomplete = ((event) => {
+        //     event.target.parentElement.remove();
+        // })
+        // addLog('Error deleting note.');
+
     }
 
     function clearInputs() {
