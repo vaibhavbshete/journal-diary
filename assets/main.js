@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     displayFormDateTime()
     connResult.onupgradeneeded = (ev) => {
         addLog('creating db') 
-        db = connResult.result
+        db = ev.target.result
         let notesObjStr = db.createObjectStore('notes', {
             keyPath: 'id',
             keyGenerator: true,
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     connResult.onsuccess = (ev) => {
-        db = connResult.result
+        db = ev.target.result
         displayNotes() 
     }
 
