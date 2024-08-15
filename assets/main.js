@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (newEntry.date) {
                     console.log('e');
                     let dt = new Date(newEntry.date)
-                    if (dt.toISOString().slice(0,10) !== currOldEntryStrt.toISOString().slice(0,10)) {
+                    if (getDateParts( dt).ymd != getDateParts( currOldEntryStrt).ymd ) {
                         // cursor.update(newEntry)
                         allNewEntries.push(newEntry)
                         newEntry = {}
@@ -289,7 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
             weekday: date.toLocaleString('en-US', { weekday: 'short' }),
             year: date.getFullYear()
         }
-        dateParts.ymd = dateParts.year + '-' + dateParts.month.padStart(2, '0') + '-' + dateParts.date.padStart(2, '0')
+        dateParts.ymd = dateParts.year + '-' + date.getMonth().toString().padStart(2, '0') + '-' + dateParts.date.padStart(2, '0')
         return dateParts
     }
         
