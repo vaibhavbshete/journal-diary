@@ -14,7 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
     startInp.addEventListener('change', displayFormDateTime)
     subBtn.addEventListener('click', () => {
         let noteVal = noteInp.value
-        let startVal = startInp.value
+        let startValParts = getDateParts(new Date(startInp.value))
+        let startVal = startValParts.year + '-' + startValParts.month.padStart(2, '0') + '-' + startValParts.date.padStart(2, '0')
         addNote(noteVal, startVal)
         displayNotes()
         resetForm()
@@ -24,7 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
     resetForm()
     displayFormDateTime()
     
-    let connResult = window.indexedDB.open('notes')
+    let connResult = window.indexedDB.open('notes',2)
+    addLog('init done')
+    console.log(connResult);
 
     connResult.onupgradeneeded = (ev) => {
         addLog('creating db') 
@@ -37,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(event); 
         };
         if (oldVersion < newVersion) {
-            addLog(`db version upgraded from ${oldVersion} to ${newVersion}`);
+            addLog(`db version upgrading from ${oldVersion} to ${newVersion}`);
         }
         if (!db.objectStoreNames.contains('notes')) {
              let notesObjStr = db.createObjectStore('notes', {
@@ -46,11 +49,63 @@ document.addEventListener('DOMContentLoaded', () => {
                 autoIncrement: true
             })
             
-            notesObjStr.createIndex('start_time','start_time',{unique:false})
-            notesObjStr.createIndex('end_time','end_time',{unique:false})
+            notesObjStr.createIndex('date','date',{unique:true})
             notesObjStr.createIndex('note','note',{unique:false})
         }
-    
+        if (oldVersion ==1) {
+            let transaction = ev.target.transaction
+            let oldStore = transaction.objectStore('notes')
+            // let cursorReq = oldStore.openCursor()
+            let cursorReq = oldStore.index('start_time').openCursor(null,'next')
+            let newEntry = {}
+            let allNewEntries = []
+            cursorReq.onsuccess = (evt) => {
+                let cursor = evt.target.result
+                if (!cursor) {
+                    allNewEntries.push(newEntry)
+                    // console.log('new entries',allNewEntries);
+                    // delete old store
+                    oldStore.clear()
+                    oldStore.deleteIndex('start_time')
+                    oldStore.deleteIndex('end_time')
+                    oldStore.createIndex('date','date',{unique:true})
+                 
+                    // add new entries
+                    allNewEntries.forEach(ent => {
+                        console.log(ent.date, ent.note);
+                        oldStore.add(ent)
+                    })
+
+                    // displayNotes()
+                    return;
+                }
+                const { start_time, end_time, note } = cursor.value;
+                console.log('currOldEnt',start_time, end_time, note);
+                let currOldEntryStrt = new Date(start_time)
+                let currOldEntTime = currOldEntryStrt.toLocaleTimeString()
+
+                if (newEntry.date) {
+                    console.log('e');
+                    let dt = new Date(newEntry.date)
+                    if (dt.toISOString().slice(0,10) !== currOldEntryStrt.toISOString().slice(0,10)) {
+                        // cursor.update(newEntry)
+                        allNewEntries.push(newEntry)
+                        newEntry = {}
+                        newEntry.date = getDateParts(currOldEntryStrt).ymd // .toISOString().slice(0,10)
+                        newEntry.note = currOldEntTime + "-----\n" + note
+                    }
+                    else {
+                        newEntry.note = newEntry.note + "\n\n" + currOldEntTime + "-----\n" + note
+                    }
+                }
+                else {
+                    newEntry.date = getDateParts(currOldEntryStrt).ymd //.toISOString().slice(0,10)
+                    newEntry.note = currOldEntTime + "-----\n" + note
+                }
+            
+                cursor.continue()
+            }
+        }
 
        
     }
@@ -58,6 +113,8 @@ document.addEventListener('DOMContentLoaded', () => {
         db = ev.target.result
         window.db = db
         displayNotes() 
+        addLog('db ready')
+       
     }
 
     connResult.onerror = (event) => {
@@ -82,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 
                 const objectStore = db.transaction('notes').objectStore('notes');
-                const request = objectStore.index("start_time").openCursor(null, "next" )
+                const request = objectStore.index("date").openCursor(null, "next" )
                 request.onsuccess = (event) => {
                     const cursor = event.target.result;
                     // Check if there are no (more) cursor items to iterate through
@@ -93,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 
                     // Check which suffix the deadline day of the month needs
-                    const { start_time, end_time, note } = cursor.value;
+                    const { date, note } = cursor.value;
                 
                     
         
@@ -115,13 +172,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     const dateTimeWrapper = listItem.querySelector('[data-date-time-wrapper]')
                     textHolder && (textHolder.innerHTML = noteText);
         
-                    let currentDateParts = getDateParts(new Date(start_time))
+                    let currentDateParts = getDateParts(new Date(date))
                     monthDayHolder && (monthDayHolder.innerHTML = currentDateParts.date )
                     monthHolder && (monthHolder.innerHTML = (currentDateParts.month ) )
                     weekDayHolder && (weekDayHolder.innerHTML = currentDateParts.weekday)
                     yearHolder && (yearHolder.innerHTML = currentDateParts.year)
                     
-                    dateTimeWrapper && (dateTimeWrapper.dateTime = new Date(start_time).toISOString())
+                    dateTimeWrapper && (dateTimeWrapper.dateTime = currentDateParts.year + '-' + currentDateParts.month.padStart(2, '0') + '-' + currentDateParts.date.padStart(2, '0'))
                     // const note
                     // closeBtn.innerHTML = '&times;';
                     // closeBtn.classList.add('close');
@@ -149,11 +206,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return
         }
         const objectStore = db.transaction('notes', 'readwrite').objectStore('notes');
-        objectStore.add({
-            start_time: start,
-            end_time: start,
+        let addreq = objectStore.add({
+            date: start,
             note: text
         });
+        addreq.onerror = (ev) => {
+            addLog('Error adding note.');
+            console.error(ev,addreq);
+        }
 
     }
 
@@ -220,15 +280,17 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Returns date parts as object
      * @param {Date} date 
-     * @returns {Object} {date, month, weekday, year}
+     * @returns {Object} {date, month, weekday, year, ymd}
      */
     function getDateParts(date) {
-        return {
+        let dateParts = {
             date: date.getDate().toString().padStart(2, '0'),
             month: date.toLocaleString('en-US', { month: 'short' }),
             weekday: date.toLocaleString('en-US', { weekday: 'short' }),
             year: date.getFullYear()
         }
+        dateParts.ymd = dateParts.year + '-' + dateParts.month.padStart(2, '0') + '-' + dateParts.date.padStart(2, '0')
+        return dateParts
     }
         
 })
