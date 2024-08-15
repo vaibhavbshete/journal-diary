@@ -9,51 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let formDateButton = document.getElementById('formDateBtn')
     let noteTemplate = document.getElementById('noteTemplate')
     let emptyNotesTemplate = document.getElementById('noNotesTemp')
-
-    let connResult = window.indexedDB.open('notes')
-
-    formDateButton.addEventListener('click',()=> startInp.showPicker())
+    
+    formDateButton.addEventListener('click', () => startInp.showPicker())
     startInp.addEventListener('change', displayFormDateTime)
-
-    function displayFormDateTime() {
-
-        let enteredDate = startInp.value!='' ? (new Date(startInp.value)) : (new Date())
-        // console.log(enteredDate);
-        let monthDayDisplay = document.querySelector('[data-form-display="date"]')
-        let monthDisplay = document.querySelector('[data-form-display="month"]')
-        let weekDayDisplay = document.querySelector('[data-form-display="weekday"]')
-
-        let formDateParts = getDateParts(enteredDate)
-        monthDayDisplay && (monthDayDisplay.innerText = formDateParts.date)
-        weekDayDisplay && (weekDayDisplay.innerText = formDateParts.weekday)
-        monthDisplay && (monthDisplay.innerText = formDateParts.month)
-        
-    }
-
-    resetForm()
-    displayFormDateTime()
-    connResult.onupgradeneeded = (ev) => {
-        addLog('creating db') 
-        db = ev.target.result
-        let notesObjStr = db.createObjectStore('notes', {
-            keyPath: 'id',
-            keyGenerator: true,
-            autoIncrement: true
-        })
-        db.onerror = (event) => {
-            addLog('Error loading database.');
-        };
-        notesObjStr.createIndex('start_time','start_time',{unique:false})
-        notesObjStr.createIndex('end_time','end_time',{unique:false})
-        notesObjStr.createIndex('note','note',{unique:false})
-    }
-
-    connResult.onsuccess = (ev) => {
-        db = ev.target.result
-        displayNotes() 
-    }
-
-
     subBtn.addEventListener('click', () => {
         let noteVal = noteInp.value
         let startVal = startInp.value
@@ -62,7 +20,51 @@ document.addEventListener('DOMContentLoaded', () => {
         resetForm()
         displayFormDateTime()
     })
+
+    resetForm()
+    displayFormDateTime()
     
+    let connResult = window.indexedDB.open('notes')
+
+    connResult.onupgradeneeded = (ev) => {
+        addLog('creating db') 
+        db = ev.target.result
+        window.db = db
+        const oldVersion = ev.oldVersion
+        const newVersion = ev.newVersion || db.version
+        db.onerror = (event) => {
+            addLog('Error loading database.');
+            console.log(event); 
+        };
+        if (oldVersion < newVersion) {
+            addLog(`db version upgraded from ${oldVersion} to ${newVersion}`);
+        }
+        if (!db.objectStoreNames.contains('notes')) {
+             let notesObjStr = db.createObjectStore('notes', {
+                keyPath: 'id',
+                keyGenerator: true,
+                autoIncrement: true
+            })
+            
+            notesObjStr.createIndex('start_time','start_time',{unique:false})
+            notesObjStr.createIndex('end_time','end_time',{unique:false})
+            notesObjStr.createIndex('note','note',{unique:false})
+        }
+    
+
+       
+    }
+    connResult.onsuccess = (ev) => {
+        db = ev.target.result
+        window.db = db
+        displayNotes() 
+    }
+
+    connResult.onerror = (event) => {
+        addLog('Error loading database.');
+        console.error(event.target.error);
+    }
+
     function displayNotes() {
         // clear existing notes first
         while (notesUl.firstChild) {
@@ -200,35 +202,25 @@ document.addEventListener('DOMContentLoaded', () => {
         startInp.value = dtStr
     }
 
-    /**
-     * Formats date to an epic readable format, like in a storybook
-     * @param {Date} $dateTime 
-     */
-    function formatEpicDate(dateTime) {
-        let datePart = dateTime.toLocaleDateString('en-US', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            // hour: '2-digit',
-            // minute: '2-digit',
-        });
+    function displayFormDateTime() {
+
+        let enteredDate = startInp.value!='' ? (new Date(startInp.value)) : (new Date())
+        // console.log(enteredDate);
+        let monthDayDisplay = document.querySelector('[data-form-display="date"]')
+        let monthDisplay = document.querySelector('[data-form-display="month"]')
+        let weekDayDisplay = document.querySelector('[data-form-display="weekday"]')
+
+        let formDateParts = getDateParts(enteredDate)
+        monthDayDisplay && (monthDayDisplay.innerText = formDateParts.date)
+        weekDayDisplay && (weekDayDisplay.innerText = formDateParts.weekday)
+        monthDisplay && (monthDisplay.innerText = formDateParts.month)
         
-        return datePart 
-    }
-
-    function formatTime(dateTime) {
-        let bigHour = dateTime.getHours()
-        let amPm = bigHour >= 12 ? 'PM' : 'AM'
-        let smallHour = bigHour > 12 ? bigHour - 12 : bigHour
-        let timePart = smallHour.toString().padStart(2, '0') + ':' + dateTime.getMinutes().toString().padStart(2, '0') + amPm;
-        return timePart
     }
 
     /**
-     * 
+     * Returns date parts as object
      * @param {Date} date 
-     * @returns {Object {date, month, weekday, year}}
+     * @returns {Object} {date, month, weekday, year}
      */
     function getDateParts(date) {
         return {
