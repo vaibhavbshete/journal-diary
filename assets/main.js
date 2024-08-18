@@ -155,15 +155,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                     
         
-                    // Build the to-do list entry and put it into the list item.
+                    // Build the entry and put it into the list item.
                     let nt = (note + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2');
                     const noteText =  `${nt}`;
-                    // const listItem = createListItem(noteText);
                     const listItem = noteTemplate.content.cloneNode(true)
-                    // console.log(listItem);
-                    // listItem.append
                     const closeBtn = listItem.querySelector('button[data-close]')
-                    // console.log(closeBtn);
                     const textHolder = listItem.querySelector('div[data-note-text]')
                     const weekDayHolder = listItem.querySelector('[data-weekday]')
                     const monthDayHolder = listItem.querySelector('[data-day]')
@@ -180,15 +176,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     yearHolder && (yearHolder.innerHTML = currentDateParts.year)
                     
                     dateTimeWrapper && (dateTimeWrapper.dateTime = currentDateParts.year + '-' + currentDateParts.month.padStart(2, '0') + '-' + currentDateParts.date.padStart(2, '0'))
-                    // const note
-                    // closeBtn.innerHTML = '&times;';
-                    // closeBtn.classList.add('close');
                     closeBtn.dataset.noteId = cursor.primaryKey;
-                    closeBtn.addEventListener('click', (ev) => {
-                        deleteNote(ev);
-                    });
-                    // listItem.prepend(closeBtn);
-        
+                    closeBtn.addEventListener('click', (ev) => deleteNote(ev));        
         
                     // Put the item item inside the task list
                     notesUl.appendChild(listItem);
@@ -226,20 +215,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const delres = transaction.objectStore('notes').delete(noteId)
         // console.log('delres',delres);
         const parentElement = ev.target.parentElement
-        delres.onsuccess = (ev) => {
-            // console.log('compl',ev);
-            displayNotes()
+        delres.onsuccess = (event) => {
+            console.log('delres',event);
+            addLog('Note deleted successfully.');
+            event.target.parentElement.remove();
         }
-        // transaction.oncomplete = ((event) => {
-        //     event.target.parentElement.remove();
-        // })
-        // addLog('Error deleting note.');
-
-    }
-
-    function clearInputs() {
-        noteInp.value = ''
-        startInp.value = ''
+        transaction.oncomplete = ((event) => {
+            console.log('transaction complete',event);
+            return 
+        })
+        transaction.onerror = ((event) => {
+            console.error('delete transaction error',event.target);
+            addLog('Error deleting note.');
+        })
+        transaction.onabort = ((event) => {
+            console.error('delete transaction aborted',event.target.error);
+            addLog('Error deleting note.');
+        })
 
     }
 
