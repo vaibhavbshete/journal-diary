@@ -258,9 +258,8 @@ document.addEventListener('DOMContentLoaded', () => {
         noteInp.value = ''
         
         let dt = new Date()
-        let dtStr = dt.getFullYear() + '-' + ((dt.getMonth() + 1).toString().padStart(2, '0')) + '-' + dt.getDate().toString().padStart(2,0) + 'T' + (dt.getHours().toString().padStart(2, '0')) + ':' + (dt.getMinutes().toString().padStart(2, '0'))
-        // console.log(dtStr);
-        startInp.value = dtStr
+        let dp = getDateParts(dt)
+        startInp.value = dp.ymd
     }
 
     function displayFormDateTime() {
