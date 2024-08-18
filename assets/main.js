@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createListItem(contents) {
         const listItem = document.createElement('li');
-        listItem.innerHTML = contents;
+        listItem.textContent = contents;
         return listItem;
     };
 
