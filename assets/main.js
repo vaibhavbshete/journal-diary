@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
         delres.onsuccess = (event) => {
             console.log('delres',event);
             addLog('Note deleted successfully.');
-            event.target.parentElement.remove();
+            parentElement.remove();
         }
         transaction.oncomplete = ((event) => {
             console.log('transaction complete',event);
