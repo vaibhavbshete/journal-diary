@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    addLog('DOM Content loaded') 
+    console.log('DOM Content loaded') 
     var db
     let notesUl = document.getElementById('notesList')
    
@@ -26,17 +26,16 @@ document.addEventListener('DOMContentLoaded', () => {
     displayFormDateTime()
     
     let connResult = window.indexedDB.open('notes',2)
-    addLog('init done')
-    console.log(connResult);
+    console.log('init done',connResult);
 
     connResult.onupgradeneeded = (ev) => {
-        addLog('creating db') 
+        console.log('creating db') 
         db = ev.target.result
         window.db = db
         const oldVersion = ev.oldVersion
         const newVersion = ev.newVersion || db.version
         db.onerror = (event) => {
-            addLog('Error loading database.');
+            console.log('Error loading database.');
             console.log(event); 
         };
         if (oldVersion < newVersion) {
@@ -114,13 +113,12 @@ document.addEventListener('DOMContentLoaded', () => {
         db = ev.target.result
         window.db = db
         displayNotes() 
-        addLog('db ready')
-       
+        console.log('db ready');
+        
     }
 
     connResult.onerror = (event) => {
-        addLog('Error loading database.');
-        console.error(event.target.error);
+        console.error('Error loading database',event.target.error);
     }
 
     function displayNotes() {
@@ -146,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Check if there are no (more) cursor items to iterate through
                     if (!cursor) {
                         // No more items to iterate through, we quit.
-                        addLog('All entries displayed.');
+                        console.log('All entries displayed.');
                         return;
                     }
                 
@@ -201,8 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
             note: text
         });
         addreq.onerror = (ev) => {
-            addLog('Error adding note.');
-            console.error(ev,addreq);
+            console.error('Error adding note',ev,addreq);
         }
 
     }
@@ -217,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const parentElement = ev.target.parentElement
         delres.onsuccess = (event) => {
             console.log('delres',event);
-            addLog('Note deleted successfully.');
+            console.log('Note deleted successfully.');
             parentElement.remove();
         }
         transaction.oncomplete = ((event) => {
@@ -226,18 +223,13 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         transaction.onerror = ((event) => {
             console.error('delete transaction error',event.target);
-            addLog('Error deleting note.');
+            console.log('Error deleting note.');
         })
         transaction.onabort = ((event) => {
             console.error('delete transaction aborted',event.target.error);
-            addLog('Error deleting note.');
+            console.log('Error deleting note.');
         })
 
-    }
-
-    function addLog(text) {
-        let logUl = document.getElementById('logList')
-        logUl.appendChild(createListItem(text)); 
     }
 
     function createListItem(contents) {
