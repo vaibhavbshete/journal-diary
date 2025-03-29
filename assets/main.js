@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(event); 
         };
         if (oldVersion < newVersion) {
-            addLog(`db version upgrading from ${oldVersion} to ${newVersion}`);
+            console.log(`db version upgrading from ${oldVersion} to ${newVersion}`);
         }
         if (!db.objectStoreNames.contains('notes')) {
              let notesObjStr = db.createObjectStore('notes', {
