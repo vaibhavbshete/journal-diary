@@ -29,14 +29,17 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('init done',connResult);
 
     connResult.onupgradeneeded = (ev) => {
-        console.log('creating db') 
-        db = ev.target.result
+        console.log('upgrade needed') 
+        /**
+         * @type {IDBDatabase}
+         */
+        const db = ev.target.result
         window.db = db
         const oldVersion = ev.oldVersion
         const newVersion = ev.newVersion || db.version
-        db.onerror = (event) => {
-            console.log('Error loading database.');
-            console.log(event); 
+        db.onerror = (errorEv) => {
+            console.error('Error caught on db');
+            console.error(errorEv.target.error?.message); 
         };
         if (oldVersion < newVersion) {
             console.log(`db version upgrading from ${oldVersion} to ${newVersion}`);
