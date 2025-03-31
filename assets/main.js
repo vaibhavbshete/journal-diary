@@ -141,7 +141,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function createNoteLi(noteText, date, noteId) {
-        const listItem = noteTemplate.content.cloneNode(true)
+        const listItemDocFrag = noteTemplate.content.cloneNode(true)
+        const listItem = listItemDocFrag.children[0]
         const closeBtn = listItem.querySelector('button[data-close]')
         const textHolder = listItem.querySelector('div[data-note-text]')
         const weekDayHolder = listItem.querySelector('[data-weekday]')
@@ -186,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // means it's got a next li, which is sitting at its to-be index
         const nextNoteLi = notesUl.children[toDisplayNoteIndex]
         notesUl.insertBefore(noteLi, nextNoteLi)
-
+        return noteLi
     }
 
     function displayNotes() {
@@ -253,7 +254,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const noteId = successEv.target.result
             console.log('Note added successfully. ID:', noteId);
             
-            insertNoteLi(nl2br(text), start, noteId, false)
+            const insertedNoteLi = insertNoteLi(nl2br(text), start, noteId, false)
+            if(insertedNoteLi.scrollIntoView) {
+                insertedNoteLi.scrollIntoView({ behavior: 'smooth' })
+            }
+            else {
+                console.log('insertedNoteLi',insertedNoteLi);
+            }
         }
 
     }
