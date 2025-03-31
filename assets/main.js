@@ -1,6 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM Content loaded') 
-    var db
+    /**
+     * @type {IDBDatabase | null}
+     */
+    let db
     let notesUl = document.getElementById('notesList')
    
     let subBtn = document.getElementById('subBtn')
@@ -17,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let startValParts = getDateParts(new Date(startInp.value))
         let startVal = startValParts.year + '-' + startValParts.month.padStart(2, '0') + '-' + startValParts.date.padStart(2, '0')
         addNote(noteVal, startVal)
-        displayNotes()
+        // displayNotes()
         resetForm()
         displayFormDateTime()
     })
@@ -124,6 +127,68 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error loading database',event.target.error);
     }
 
+    /**
+     * 
+     * @param {*} str 
+     * @returns string
+     * @description Replaces line-breaks (\n, \r, \r\n) with <br> in string.
+     * Coerces to string if not already a string.
+     * @example
+     * nl2br('Hello\nWorld!') // returns 'Hello<br>World!'
+     */
+    function nl2br(str) {
+        return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2');
+    }
+
+    function createNoteLi(noteText, date, noteId) {
+        const listItem = noteTemplate.content.cloneNode(true)
+        const closeBtn = listItem.querySelector('button[data-close]')
+        const textHolder = listItem.querySelector('div[data-note-text]')
+        const weekDayHolder = listItem.querySelector('[data-weekday]')
+        const monthDayHolder = listItem.querySelector('[data-day]')
+        const monthHolder = listItem.querySelector('[data-month]')
+        const yearHolder = listItem.querySelector('[data-year]')
+        
+        const dateTimeWrapper = listItem.querySelector('[data-date-time-wrapper]')
+        textHolder && (textHolder.innerHTML = noteText);
+
+        const noteDate = new Date(date)
+        let currentDateParts = getDateParts(noteDate)
+        monthDayHolder && (monthDayHolder.innerHTML = currentDateParts.date )
+        monthHolder && (monthHolder.innerHTML = (currentDateParts.month ) )
+        weekDayHolder && (weekDayHolder.innerHTML = currentDateParts.weekday)
+        yearHolder && (yearHolder.innerHTML = currentDateParts.year)
+        
+        dateTimeWrapper && (dateTimeWrapper.dateTime = noteDate.toISOString())
+        closeBtn.dataset.noteId = noteId;
+        closeBtn.addEventListener('click', (ev) => deleteNote(ev));        
+
+        return listItem
+    }
+
+    function insertNoteLi(noteText, date, noteId, appendAtEnd = true) {
+        const noteLi = createNoteLi(noteText,date,noteId)
+        // Put the list item inside the task list
+        if (!noteLi.children.length || appendAtEnd) {
+            notesUl.appendChild(noteLi);
+            return
+        }
+        // if there are other lis, determine where to put the new one first
+        let displayedDates = [...notesUl.children].map(el => el.querySelector('time[data-date-time-wrapper]').dateTime)
+        let toDisplayNoteDate = new Date(date).toISOString()
+        displayedDates.push(toDisplayNoteDate)
+        displayedDates.sort()
+        let toDisplayNoteIndex = displayedDates.indexOf(toDisplayNoteDate)
+        if (toDisplayNoteIndex == noteLi.children.length) {
+            notesUl.appendChild(noteLi);
+            return
+        }
+        // means it's got a next li, which is sitting at its to-be index
+        const nextNoteLi = notesUl.children[toDisplayNoteIndex]
+        notesUl.insertBefore(noteLi, nextNoteLi)
+
+    }
+
     function displayNotes() {
         // clear existing notes first
         while (notesUl.firstChild) {
@@ -157,31 +222,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     
         
                     // Build the entry and put it into the list item.
-                    let nt = (note + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2');
-                    const noteText =  `${nt}`;
-                    const listItem = noteTemplate.content.cloneNode(true)
-                    const closeBtn = listItem.querySelector('button[data-close]')
-                    const textHolder = listItem.querySelector('div[data-note-text]')
-                    const weekDayHolder = listItem.querySelector('[data-weekday]')
-                    const monthDayHolder = listItem.querySelector('[data-day]')
-                    const monthHolder = listItem.querySelector('[data-month]')
-                    const yearHolder = listItem.querySelector('[data-year]')
+                    const noteText = nl2br(note)
+                    // const noteText =  `${nt}`;
+                    insertNoteLi(noteText, date, cursor.primaryKey)
                     
-                    const dateTimeWrapper = listItem.querySelector('[data-date-time-wrapper]')
-                    textHolder && (textHolder.innerHTML = noteText);
-        
-                    let currentDateParts = getDateParts(new Date(date))
-                    monthDayHolder && (monthDayHolder.innerHTML = currentDateParts.date )
-                    monthHolder && (monthHolder.innerHTML = (currentDateParts.month ) )
-                    weekDayHolder && (weekDayHolder.innerHTML = currentDateParts.weekday)
-                    yearHolder && (yearHolder.innerHTML = currentDateParts.year)
-                    
-                    dateTimeWrapper && (dateTimeWrapper.dateTime = currentDateParts.year + '-' + currentDateParts.month.padStart(2, '0') + '-' + currentDateParts.date.padStart(2, '0'))
-                    closeBtn.dataset.noteId = cursor.primaryKey;
-                    closeBtn.addEventListener('click', (ev) => deleteNote(ev));        
-        
-                    // Put the item item inside the task list
-                    notesUl.appendChild(listItem);
         
         
                     // continue on to the next item in the cursor
@@ -202,7 +246,14 @@ document.addEventListener('DOMContentLoaded', () => {
             note: text
         });
         addreq.onerror = (ev) => {
-            console.error('Error adding note',ev,addreq);
+            console.error('Error adding note:',ev.target.error?.message);
+        }
+        addreq.onsuccess = (successEv) => {
+            console.log('sucess', successEv.target)
+            const noteId = successEv.target.result
+            console.log('Note added successfully. ID:', noteId);
+            
+            insertNoteLi(nl2br(text), start, noteId, false)
         }
 
     }
