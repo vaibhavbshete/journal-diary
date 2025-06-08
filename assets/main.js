@@ -33,10 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     connResult.onupgradeneeded = (ev) => {
         console.log('upgrade needed') 
-        /**
-         * @type {IDBDatabase}
-         */
-        const db = ev.target.result
+        db = ev.target.result
         window.db = db
         const oldVersion = ev.oldVersion
         const newVersion = ev.newVersion || db.version
@@ -48,7 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(`db version upgrading from ${oldVersion} to ${newVersion}`);
         }
         if (!db.objectStoreNames.contains('notes')) {
-             let notesObjStr = db.createObjectStore('notes', {
+            // this is the first time this is being created
+            // as good as if checked newVersion == 1
+            let notesObjStr = db.createObjectStore('notes', {
                 keyPath: 'id',
                 keyGenerator: true,
                 autoIncrement: true
@@ -58,14 +57,16 @@ document.addEventListener('DOMContentLoaded', () => {
             notesObjStr.createIndex('note','note',{unique:false})
         }
         if (oldVersion ==1) {
-            let transaction = ev.target.transaction
+            /** @type {IDBTransaction} */
+            const transaction = ev.target.transaction
             let oldStore = transaction.objectStore('notes')
             // let cursorReq = oldStore.openCursor()
             let cursorReq = oldStore.index('start_time').openCursor(null,'next')
             let newEntry = {}
             let allNewEntries = []
             cursorReq.onsuccess = (evt) => {
-                let cursor = evt.target.result
+                /** @type {IDBCursor | null} */
+                const cursor = evt.target.result
                 if (!cursor) {
                     allNewEntries.push(newEntry)
                     // console.log('new entries',allNewEntries);
@@ -90,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 let currOldEntTime = currOldEntryStrt.toLocaleTimeString()
 
                 if (newEntry.date) {
-                    console.log('e');
+                    // console.log('e');
                     let dt = new Date(newEntry.date)
                     console.log(getDateParts( dt).ymd ,getDateParts( currOldEntryStrt).ymd);
                     if (getDateParts( dt).ymd != getDateParts( currOldEntryStrt).ymd ) {
