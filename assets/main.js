@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
             notesObjStr.createIndex('end_time','end_time',{unique:false})
             notesObjStr.createIndex('note','note',{unique:false})
         }
-        if (oldVersion ==1) {
+        if (oldVersion < 2) {
             /** @type {IDBTransaction} */
             const transaction = ev.target.transaction
             let oldStore = transaction.objectStore('notes')
