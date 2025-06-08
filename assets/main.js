@@ -53,7 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 autoIncrement: true
             })
             
-            notesObjStr.createIndex('date','date',{unique:true})
+            notesObjStr.createIndex('start_time','start_time',{unique:false})
+            notesObjStr.createIndex('end_time','end_time',{unique:false})
             notesObjStr.createIndex('note','note',{unique:false})
         }
         if (oldVersion ==1) {
