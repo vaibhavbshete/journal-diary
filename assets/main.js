@@ -281,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Put the list item inside the task list
         if (!noteLi.children.length || appendAtEnd) {
             notesUl.appendChild(noteLi);
-            return
+            return noteLi
         }
         // if there are other lis, determine where to put the new one first
         let displayedDates = [...notesUl.children].map(el => el.querySelector('time[data-date-time-wrapper]').dateTime)
@@ -291,7 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let toDisplayNoteIndex = displayedDates.indexOf(toDisplayNoteDate)
         if (toDisplayNoteIndex == noteLi.children.length) {
             notesUl.appendChild(noteLi);
-            return
+            return noteLi
         }
         // means it's got a next li, which is sitting at its to-be index
         const nextNoteLi = notesUl.children[toDisplayNoteIndex]
