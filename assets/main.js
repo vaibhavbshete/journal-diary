@@ -17,9 +17,11 @@ document.addEventListener('DOMContentLoaded', () => {
     startInp.addEventListener('change', displayFormDateTime)
     subBtn.addEventListener('click', () => {
         let noteVal = noteInp.value
+        console.log(startInp.value);
+        
         let startValParts = getDateParts(new Date(startInp.value))
         let startVal = startValParts.year + '-' + startValParts.month.padStart(2, '0') + '-' + startValParts.date.padStart(2, '0')
-        addNote(noteVal, startVal)
+        addNote(noteVal, startInp.value)
         // displayNotes()
         resetForm()
         displayFormDateTime()
@@ -28,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     resetForm()
     displayFormDateTime()
     
-    let connResult = window.indexedDB.open('notes',2)
+    let connResult = window.indexedDB.open('notes',3)
     console.log('init done',connResult);
 
     connResult.onupgradeneeded = (ev) => {
@@ -47,6 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!db.objectStoreNames.contains('notes')) {
             // this is the first time this is being created
             // as good as if checked newVersion == 1
+            console.log('if ! contains notes');
+
             let notesObjStr = db.createObjectStore('notes', {
                 keyPath: 'id',
                 keyGenerator: true,
@@ -58,61 +62,164 @@ document.addEventListener('DOMContentLoaded', () => {
             notesObjStr.createIndex('note','note',{unique:false})
         }
         if (oldVersion < 2) {
+            console.log('if < 2');
+            
             /** @type {IDBTransaction} */
             const transaction = ev.target.transaction
             let oldStore = transaction.objectStore('notes')
-            // let cursorReq = oldStore.openCursor()
-            let cursorReq = oldStore.index('start_time').openCursor(null,'next')
-            let newEntry = {}
-            let allNewEntries = []
-            cursorReq.onsuccess = (evt) => {
-                /** @type {IDBCursor | null} */
-                const cursor = evt.target.result
-                if (!cursor) {
-                    allNewEntries.push(newEntry)
-                    // console.log('new entries',allNewEntries);
-                    // delete old store
-                    oldStore.clear()
-                    oldStore.deleteIndex('start_time')
-                    oldStore.deleteIndex('end_time')
-                    oldStore.createIndex('date','date',{unique:true})
-                 
-                    // add new entries
-                    allNewEntries.forEach(ent => {
-                        console.log(ent.date, ent.note);
-                        oldStore.add(ent)
-                    })
-
-                    // displayNotes()
-                    return;
-                }
-                const { start_time, end_time, note } = cursor.value;
-                console.log('currOldEnt',start_time, end_time, note);
-                let currOldEntryStrt = new Date(start_time)
-                let currOldEntTime = currOldEntryStrt.toLocaleTimeString()
-
-                if (newEntry.date) {
-                    // console.log('e');
-                    let dt = new Date(newEntry.date)
-                    console.log(getDateParts( dt).ymd ,getDateParts( currOldEntryStrt).ymd);
-                    if (getDateParts( dt).ymd != getDateParts( currOldEntryStrt).ymd ) {
-                        // cursor.update(newEntry)
-                        allNewEntries.push(newEntry)
-                        newEntry = {}
-                        newEntry.date = getDateParts(currOldEntryStrt).ymd // .toISOString().slice(0,10)
-                        newEntry.note = currOldEntTime + "-----\n" + note
+            let countReq = oldStore.count()
+            countReq.onsuccess = (ev) => {
+                if (ev.target.result > 0) {
+                    
+                    // let cursorReq = oldStore.openCursor()
+                    let cursorReq = oldStore.index('start_time').openCursor(null,'next')
+                    let newEntry = {}
+                    let allNewEntries = []
+                    cursorReq.onsuccess = (evt) => {
+                        console.log('2 cursor req success');
+                        
+                        /** @type {IDBCursor | null} */
+                        const cursor = evt.target.result
+                        if (!cursor) {
+                            allNewEntries.push(newEntry)
+                            // console.log('new entries',allNewEntries);
+                            // delete old store
+                            oldStore.clear()
+                            oldStore.deleteIndex('start_time')
+                            oldStore.deleteIndex('end_time')
+                            oldStore.createIndex('date','date',{unique:true})
+                         
+                            // add new entries
+                            allNewEntries.forEach(ent => {
+                                console.log(ent.date, ent.note);
+                                oldStore.add(ent)
+                            })
+        
+                            // displayNotes()
+                            return;
+                        }
+                        const { start_time, end_time, note } = cursor.value;
+                        console.log('currOldEnt',start_time, end_time, note);
+                        let currOldEntryStrt = new Date(start_time)
+                        let currOldEntTime = currOldEntryStrt.toLocaleTimeString()
+        
+                        if (newEntry.date) {
+                            // console.log('e');
+                            let dt = new Date(newEntry.date)
+                            console.log(getDateParts( dt).ymd ,getDateParts( currOldEntryStrt).ymd);
+                            if (getDateParts( dt).ymd != getDateParts( currOldEntryStrt).ymd ) {
+                                // cursor.update(newEntry)
+                                allNewEntries.push(newEntry)
+                                newEntry = {}
+                                newEntry.date = getDateParts(currOldEntryStrt).ymd // .toISOString().slice(0,10)
+                                newEntry.note = currOldEntTime + "-----\n" + note
+                            }
+                            else {
+                                newEntry.note = newEntry.note + "\n\n" + currOldEntTime + "-----\n" + note
+                            }
+                        }
+                        else {
+                            newEntry.date = getDateParts(currOldEntryStrt).ymd //.toISOString().slice(0,10)
+                            newEntry.note = currOldEntTime + "-----\n" + note
+                        }
+                    
+                        cursor.continue()
                     }
-                    else {
-                        newEntry.note = newEntry.note + "\n\n" + currOldEntTime + "-----\n" + note
+                    cursorReq.onerror = (ev) => {
+                        console.log(ev);
+                        
+                        let transaction = ev.target.transaction;
+                        let oldStore = transaction.objectStore('notes')
+                        oldStore.deleteIndex('start_time')
+                            oldStore.deleteIndex('end_time')
+                            oldStore.createIndex('date','date',{unique:true})
+                    }
+                }
+                else{
+                     oldStore.deleteIndex('start_time')
+                            oldStore.deleteIndex('end_time')
+                            oldStore.createIndex('date','date',{unique:true})
+                }
+                console.log(ev.target.result);
+            }
+            countReq.onerror = (ev) => {
+                console.error(ev);
+                
+            }
+            console.log(oldStore.indexNames);
+            
+        }
+        if (oldVersion < 3) {
+            console.log('if < 3');
+          
+            const transaction = ev.target.transaction
+            /** @type {IDBObjectStore} */
+            let oldStore = transaction.objectStore('notes')
+            console.log(oldStore.indexNames);
+
+            let countReq = oldStore.count()
+            countReq.onsuccess = (ev) => {
+                if (ev.target.result > 0) {
+                    // let cursorReq = oldStore.openCursor()
+                    let cursorReq = oldStore.index('date').openCursor(null,'next')
+                    let allNewEntries = []
+                   
+                    cursorReq.onsuccess = (evt) => {
+                        /** @type {IDBCursor | null} */
+                        const cursor = evt.target.result
+                        if (!cursor) {
+                            // allNewEntries.push(newEntry)
+                            // console.log('new entries',allNewEntries);
+                            // delete old store
+                            oldStore.clear()
+                            oldStore.deleteIndex('date')
+                            oldStore.createIndex('start_time','start_time',{unique:true})
+                         
+                            // add new entries
+                            allNewEntries.forEach(ent => {
+                                // console.log(ent.date, ent.note);
+                                oldStore.add(ent)
+                            })
+        
+                            // displayNotes()
+                            return;
+                        }
+                        const { date, note } = cursor.value;
+                        // console.log('currOldEnt',start_time, end_time, note);
+                        let currOldEntryStrt = new Date(date)
+                        let currOldEntTime = currOldEntryStrt.toLocaleTimeString()
+                        let newEntry = {}
+                        newEntry.start_time = currOldEntryStrt.toISOString() //.toISOString().slice(0,10)
+                        newEntry.note = currOldEntTime + "-----\n" + note
+                        allNewEntries.push(newEntry)
+                        if (newEntry.date) {
+                            // console.log('e');
+                            let dt = new Date(newEntry.date)
+                            console.log(getDateParts( dt).ymd ,getDateParts( currOldEntryStrt).ymd);
+                            if (getDateParts( dt).ymd != getDateParts( currOldEntryStrt).ymd ) {
+                                // cursor.update(newEntry)
+                                allNewEntries.push(newEntry)
+                                newEntry = {}
+                                newEntry.date = getDateParts(currOldEntryStrt).ymd // .toISOString().slice(0,10)
+                                newEntry.note = currOldEntTime + "-----\n" + note
+                            }
+                            else {
+                                newEntry.note = newEntry.note + "\n\n" + currOldEntTime + "-----\n" + note
+                            }
+                        }
+                        else {
+                           
+                        }
+                    
+                        cursor.continue()
                     }
                 }
                 else {
-                    newEntry.date = getDateParts(currOldEntryStrt).ymd //.toISOString().slice(0,10)
-                    newEntry.note = currOldEntTime + "-----\n" + note
+                    oldStore.deleteIndex('date')
+                            oldStore.createIndex('start_time','start_time',{unique:true})
                 }
-            
-                cursor.continue()
             }
+            
         }
 
        
@@ -202,14 +309,16 @@ document.addEventListener('DOMContentLoaded', () => {
         countRes.onsuccess = (event) => {
             console.log('count', event.target.result);
             if (event.target.result == 0) {
-                let emptyNotesLi = emptyNotesTemplate.content.cloneNode(true)
-                notesUl.appendChild(emptyNotesLi)
+                // let emptyNotesLi = emptyNotesTemplate.content.cloneNode(true)
+                // notesUl.appendChild(emptyNotesLi)
             }
             else {
                 
                 
                 const objectStore = db.transaction('notes').objectStore('notes');
-                const request = objectStore.index("date").openCursor(null, "next" )
+                console.log(objectStore.indexNames,db.version);
+                
+                const request = objectStore.index("start_time").openCursor(null, "next" )
                 request.onsuccess = (event) => {
                     const cursor = event.target.result;
                     // Check if there are no (more) cursor items to iterate through
@@ -220,14 +329,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 
                     // Check which suffix the deadline day of the month needs
-                    const { date, note } = cursor.value;
+                    const { start_time, note } = cursor.value;
                 
                     
         
                     // Build the entry and put it into the list item.
                     const noteText = nl2br(note)
                     // const noteText =  `${nt}`;
-                    insertNoteLi(noteText, date, cursor.primaryKey)
+                    insertNoteLi(noteText, start_time, cursor.primaryKey)
                     
         
         
@@ -243,9 +352,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if(text === '' || start === '') {
             return
         }
+        console.log(text,start);
+        
         const objectStore = db.transaction('notes', 'readwrite').objectStore('notes');
         let addreq = objectStore.add({
-            date: start,
+            start_time: start,
             note: text
         });
         addreq.onerror = (ev) => {
@@ -306,7 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let dt = new Date()
         let dp = getDateParts(dt)
-        startInp.value = dp.ymd
+        startInp.value = dt.toISOString()
     }
 
     function displayFormDateTime() {
