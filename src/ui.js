@@ -14,10 +14,10 @@ export function initui() {
     subBtn.addEventListener('click', () => {
         let noteVal = noteInp.value
         console.log(startInp.value);
-        
+        let inputDate = new Date(startInp.value)
         let startValParts = getDateParts(new Date(startInp.value))
         // let startVal = startValParts.year + '-' + startValParts.month.padStart(2, '0') + '-' + startValParts.date.padStart(2, '0')
-        addNote(noteVal, startInp.value, (noteId) => {
+        addNote(noteVal, inputDate.toISOString(), (noteId) => {
             const insertedNoteLi = insertNoteLi(nl2br(noteVal), startInp.value, noteId, false)
             if(insertedNoteLi.scrollIntoView) {
                 insertedNoteLi.scrollIntoView({ behavior: 'smooth' })
