@@ -177,15 +177,15 @@ export function displayNotes() {
 
 export function displayFormDateTime() {
 
-        let enteredDate = startInp.value!='' ? (new Date(startInp.value)) : (new Date())
-        // console.log(enteredDate);
-        let monthDayDisplay = document.querySelector('[data-form-display="date"]')
-        let monthDisplay = document.querySelector('[data-form-display="month"]')
-        let weekDayDisplay = document.querySelector('[data-form-display="weekday"]')
+    let enteredDate = startInp.value!='' ? (new Date(startInp.value)) : (new Date())
+    // console.log(enteredDate);
+    let monthDayDisplay = document.querySelector('[data-form-display="date"]')
+    let monthDisplay = document.querySelector('[data-form-display="month"]')
+    let weekDayDisplay = document.querySelector('[data-form-display="weekday"]')
 
-        let formDateParts = getDateParts(enteredDate)
-        monthDayDisplay && (monthDayDisplay.innerText = formDateParts.date)
-        weekDayDisplay && (weekDayDisplay.innerText = formDateParts.weekday)
-        monthDisplay && (monthDisplay.innerText = formDateParts.month)
-        
-    }
+    let formDateParts = getDateParts(enteredDate)
+    monthDayDisplay && (monthDayDisplay.innerText = formDateParts.date)
+    weekDayDisplay && (weekDayDisplay.innerText = formDateParts.weekday)
+    monthDisplay && (monthDisplay.innerText = formDateParts.month)
+    
+}
