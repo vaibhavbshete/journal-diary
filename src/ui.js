@@ -14,8 +14,7 @@ export function initui() {
     subBtn.addEventListener('click', () => {
         let noteVal = noteInp.value
         console.log(startInp.value);
-        let inputDate = new Date(startInp.value)
-        let startValParts = getDateParts(new Date(startInp.value))
+        let inputDate = startInp.value ? new Date(startInp.value) : new Date()
         // let startVal = startValParts.year + '-' + startValParts.month.padStart(2, '0') + '-' + startValParts.date.padStart(2, '0')
         addNote(noteVal, inputDate.toISOString(), (noteId) => {
             const insertedNoteLi = insertNoteLi(nl2br(noteVal), inputDate.toISOString(), noteId, false)
