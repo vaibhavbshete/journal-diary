@@ -18,7 +18,7 @@ export function initui() {
         let startValParts = getDateParts(new Date(startInp.value))
         // let startVal = startValParts.year + '-' + startValParts.month.padStart(2, '0') + '-' + startValParts.date.padStart(2, '0')
         addNote(noteVal, inputDate.toISOString(), (noteId) => {
-            const insertedNoteLi = insertNoteLi(nl2br(noteVal), startInp.value, noteId, false)
+            const insertedNoteLi = insertNoteLi(nl2br(noteVal), inputDate.toISOString(), noteId, false)
             if(insertedNoteLi.scrollIntoView) {
                 insertedNoteLi.scrollIntoView({ behavior: 'smooth' })
             }
@@ -40,8 +40,7 @@ let startInp = document.getElementById('startInp')
     noteInp.value = ''
     
     let dt = new Date()
-    let dp = getDateParts(dt)
-    startInp.value = dt.toISOString()
+    startInp.value = dt.toLocaleString('sv') // hack, found at https://stackoverflow.com/a/65758103/9504922
 }
 
 function createNoteLi(noteText, date, noteId) {
